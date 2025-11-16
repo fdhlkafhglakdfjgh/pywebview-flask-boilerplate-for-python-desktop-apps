@@ -1,3 +1,14 @@
+Хорошо, возвращаемся к нашей задаче. Это важно довести до конца, чтобы получить рабочий .exe.
+
+Вот полностью исправленный и самый актуальный build-exe.yml файл с учетом всех предыдущих ошибок (xlwings, flask_mail, config.json с двоеточием).
+
+Пожалуйста, скопируй его содержимое и замени им абсолютно весь текст в файле build-exe.yml на GitHub.
+
+code
+Yaml
+download
+content_copy
+expand_less
 name: Build Windows Executable
 
 on:
@@ -17,15 +28,20 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9' # Можно использовать '3.8', '3.10', '3.11'
+        python-version: '3.9' # Можно использовать '3.8', '3.10', '3.11' - лучше всего ту, на которой boilerplate тестировался
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyinstaller flask pywebview xlwings flask_mail # Добавлены xlwings и flask_mail
+        # Устанавливаем все известные зависимости, включая те, что вызывали ModuleNotFoundError
+        pip install pyinstaller flask pywebview xlwings flask_mail
 
     - name: Build with PyInstaller
-      run: pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py --hidden-import xlwings --hidden-import flask_mail --add-data "config.json;." # Добавлен config.json
+      run: |
+        pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py \
+          --hidden-import xlwings \
+          --hidden-import flask_mail \
+          --add-data "config.json:." # Исправлено на двоеточие для надежности
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
@@ -33,3 +49,25 @@ jobs:
         name: Pulse_v0.1-Windows-Executable
         path: dist/Pulse_v0.1.exe
         retention-days: 7 # Опционально: сколько дней хранить артефакт
+
+Особое внимание на изменения:
+
+Строка pip install теперь включает xlwings и flask_mail.
+
+Строка pyinstaller теперь включает --hidden-import xlwings и --hidden-import flask_mail.
+
+Самое главное: --add-data "config.json:." теперь использует двоеточие : вместо точки с запятой ;. Это более универсальный и надежный синтаксис для PyInstaller, особенно когда дело доходит до упаковки данных внутри .exe.
+
+Инструкция по замене файла на GitHub:
+
+Перейди в свой форкнутый репозиторий на GitHub.
+
+Перейди по пути .github/workflows/ и найди файл build-exe.yml.
+
+Нажми на значок карандаша (Edit this file).
+
+Удали все существующее содержимое и вставь полностью код, который я дал выше.
+
+Внизу страницы нажми "Commit changes".
+
+После этого GitHub Actions автоматически запустит новую сборку. Дай мне знать, когда .exe будет работать или если появится новая ошибка. Мы уже очень, очень близки.
