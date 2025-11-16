@@ -17,20 +17,17 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9' # Можно использовать '3.8', '3.10', '3.11' - лучше всего ту, на которой boilerplate тестировался
+        python-version: '3.9' # Используй версию Python, на которой boilerplate тестировался или которая тебе подходит
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # Устанавливаем все известные зависимости, включая те, что вызывали ModuleNotFoundError
+        # Устанавливаем все известные зависимости
         pip install pyinstaller flask pywebview xlwings flask_mail
 
     - name: Build with PyInstaller
-      run: |
-        pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py \
-          --hidden-import xlwings \
-          --hidden-import flask_mail \
-          --add-data "config.json:." # Исправлено на двоеточие для надежности
+      # Команда pyinstaller теперь в одной строке, чтобы избежать ошибок синтаксиса PowerShell
+      run: pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py --hidden-import xlwings --hidden-import flask_mail --add-data "config.json:."
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
