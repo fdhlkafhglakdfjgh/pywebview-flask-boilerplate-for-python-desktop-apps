@@ -25,7 +25,7 @@ jobs:
         pip install pyinstaller flask pywebview xlwings flask_mail # Добавлены xlwings и flask_mail
 
     - name: Build with PyInstaller
-      run: pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py --hidden-import xlwings --hidden-import flask_mail # Добавлены hidden-import
+      run: pyinstaller --onefile --windowed --name "Pulse_v0.1" app.py --hidden-import xlwings --hidden-import flask_mail --add-data "config.json;." # Добавлен config.json
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
